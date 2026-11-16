@@ -18,11 +18,14 @@ st.caption("Your AI-powered active recall assistant")
 st.write("testing connection to Gemini API")
 
 if st.button("Test gemini API"):
+    st.success("WORKSSSSSS")
     try:
+        st.write("sending request to Gemini API...")
         response=client.models.generate_content(
-            model="gemini-3.8-flash",
+            model="gemini-3.5-flash-lite",
             contents="Hello my mini helper!"
         )
+        st.write("2. Gemini responded yay")
         st.success("YAY successful")
         st.write(response.text)
 
