@@ -1,5 +1,6 @@
 import streamlit as st
 import os
+import fitz
 from dotenv import load_dotenv
 from google import genai
 
@@ -15,19 +16,36 @@ st.set_page_config(
 
 st.title("VivaVoce: My mini helper")
 st.caption("Your AI-powered active recall assistant")
-st.write("testing connection to Gemini API")
+st.header("Upload your PDF file")
 
-if st.button("Test gemini API"):
-    st.success("WORKSSSSSS")
-    try:
-        st.write("sending request to Gemini API...")
-        response=client.models.generate_content(
-            model="gemini-3.5-flash-lite",
-            contents="Hello my mini helper!"
-        )
-        st.write("2. Gemini responded yay")
-        st.success("YAY successful")
-        st.write(response.text)
+uploaded_file = st.file_uploader("Choose a PDF file", type=["pdf"])
 
-    except Exception as e:
-        st.error(f"Something went wrong: {e}")
+if uploaded_file is not None:
+    st.success("File uploaded successfully!")
+    pdf = fitz.open(stream=uploaded_file.getvalue(), filetype="pdf")
+    extracted_text = ""
+    for page in pdf:
+        extracted_text += page.get_text()
+
+    st.subheader("Extracted study material")
+    st.text_area("PDF Content", extracted_text, height=300)
+
+
+if st.button("Generate my first question"):
+        prompt=f"""
+You are VivaVoce, an AI-powered active recall assistant,
+You are called a mini helper because you are a small but powerful tool that helps students learn and retain information more effectively.
+Read the study material below and generate exactly one question that is relevant to the content.
+Do not provide any answers, just the question.
+Study material:
+{extracted_text}
+"""
+        try:
+            response=client.models.generate_content(
+                model="gemini-3.5-flash-lite",
+                contents=prompt
+            )
+            st.subheader("First viva question")
+            st.write(response.text)
+        except Exception as e:
+            st.error(f"Something went wrong: {e}")
