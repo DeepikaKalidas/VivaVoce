@@ -1,4 +1,27 @@
+
+# Secrets
 .env
+.streamlit/secrets.toml
+
+# Python environment
 .venv/
-_pycache__/
+venv/
+__pycache__/
+*.py[cod]
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploaded documents and generated files
+storage/
+uploads/
+audio/
+
+# Editor settings
 .vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
